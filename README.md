@@ -1,12 +1,14 @@
-# AWS Lambda function to generate Pingdom probe Security Groups
+# AWS Lambda function to whitelist the Pingdom probe IP addresses
 
-[Pingdom](https://pingdom.com/) is an online service that regularly monitors website uptime and performance.
+[Pingdom](https://www.pingdom.com/) is an online service that regularly monitors website
+uptime and performance.
 
 In cases where the website you want to monitor is not publicly accessible, you will need to
 whitelist all of the Pingdom probe IP addresses in order that monitoring can take place.
 
-This AWS Lambda function updates a set of security groups in order to whitelist all the
+This AWS Lambda function updates a set of security groups that collectively whitelist all the
 Pingdom probe IP addresses, allowing inbound traffic on ports 80 and 443.
+
 To function properly, the Lamdbda function should be called regularly (at least once per day).
 
 ## Usage
@@ -14,7 +16,7 @@ To function properly, the Lamdbda function should be called regularly (at least 
 ### Create a set of security groups
 
 Create a set of AWS security groups, using names of the form 'pingdom1', 'pingdom2', etc.
-Set a **Name** tag, with the value set to the name, and an **AutoUpdate tag**,
+Set a **Name** tag, with the value set to the name, and an **AutoUpdate** tag,
 with the value set to 'true'.
 
 There are currently around 70 Pingdom probe IP addresses and each requires 2 security
@@ -77,12 +79,17 @@ Now that you have created your Lambda execution role, you can create your Lambda
 2. Give your Lambda function a name and description, and select **Python 2.7** from the Runtime menu.
 3. Paste the code from `lambda-pingdom-sg.py`.
 4. Below the code window for Lambda function handler and role, select the execution role you created earlier.
-5. Under **Advanced settings**, increase the **Timeout** to 5 seconds.  If you are updating several security groups with this function, you might have to increase the timeout by even more time. Finally, click **Next**.
-6. After confirming your settings are correct, click **Create function**.
+5. Under **Advanced settings**, increase the **Timeout** to 15 seconds.
+6. Finally, click **Next**.
+7. After confirming your settings are correct, click **Create function**.
 
 ## Running your Lambda function
 
-Configure a **Scheduled Event** (under **Event sources**) to run the Lambda function on a daily basis.
+Configure a **Scheduled Event** (under **Event sources**) to run the Lambda function on
+(at least) a daily basis.
+
+Apply the resulting security groups to any resources (instances or ELBs) that you want to be accessible
+to the Pingdom probes.
 
 ## Notes
 
