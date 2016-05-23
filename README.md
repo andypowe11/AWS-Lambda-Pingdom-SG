@@ -85,6 +85,17 @@ Now that you have created your Lambda execution role, you can create your Lambda
 6. Finally, click **Next**.
 7. After confirming your settings are correct, click **Create function**.
 
+Modify the following variables in `lambda-pingdom-sg.py` as necessary:
+
+```
+# Ports that need inbound permissions from the Pingdom probes
+INGRESS_PORTS = [ 80, 443 ]
+# Tags which identify the security groups you want to update
+SECURITY_GROUP_TAGS = { 'Name': 'pingdom*', 'AutoUpdate': 'true' }
+# Limit on inbound rules per Security Group (default: 50)
+RULES_PER_SG = 50
+```
+
 ## Running your Lambda function
 
 Configure a **Scheduled Event** (under **Event sources**) to run the Lambda function on
