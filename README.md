@@ -4,7 +4,9 @@
 uptime and performance.
 
 In cases where the website you want to monitor is not publicly accessible, you will need to
-whitelist all of the Pingdom probe IP addresses in order that monitoring can take place.
+whitelist all of the
+[Pingdom probe IP addresses](https://help.pingdom.com/hc/en-us/articles/203682601-How-to-get-all-Pingdom-probes-public-IP-addresses)
+in order that monitoring can take place.
 
 This AWS Lambda function updates a set of security groups that collectively whitelist all the
 Pingdom probe IP addresses, allowing inbound traffic on ports 80 and 443.
