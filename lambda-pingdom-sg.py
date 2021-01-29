@@ -21,6 +21,8 @@ INGRESS_PORTS = [ 80, 443 ]
 SECURITY_GROUP_TAGS = { 'Name': 'pingdom*', 'AutoUpdate': 'true' }
 # Limit on inbound rules per Security Group (default: 50)
 RULES_PER_SG = 50
+# Region to search for Security Groups 
+AWS_REGION = "us-east-1"
  
 def lambda_handler(event, context):
     # Load the IP addresses from the SOURCE URL
@@ -28,7 +30,7 @@ def lambda_handler(event, context):
     print('Downloaded ' + str(len(addresses)) + ' IP addresses from ' + SOURCE + 'to whitelist')
     
     # Find available security groups based on the SECURITY_GROUP_TAGS
-    client = boto3.client('ec2', region_name='eu-west-1')
+    client = boto3.client('ec2', region_name=AWS_REGION)
     groups = get_security_groups_for_update(client)
     print ('Found ' + str(len(groups)) + ' security groups to use')
     

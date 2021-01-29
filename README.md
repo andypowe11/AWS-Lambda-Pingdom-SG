@@ -94,6 +94,8 @@ INGRESS_PORTS = [ 80, 443 ]
 SECURITY_GROUP_TAGS = { 'Name': 'pingdom*', 'AutoUpdate': 'true' }
 # Limit on inbound rules per Security Group (default: 50)
 RULES_PER_SG = 50
+# Region to search for Security Groups 
+AWS_REGION = "us-east-1"
 ```
 
 ## Running your Lambda function
