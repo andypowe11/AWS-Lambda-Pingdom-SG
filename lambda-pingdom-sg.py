@@ -11,8 +11,8 @@ Andy Powell
 '''
 
 import boto3
-import urllib2
- 
+from urllib.request import urlopen
+
 # URL of the list of Pingdom probe IP addresses to be whitelisted
 SOURCE = "https://my.pingdom.com/probes/ipv4"
 # Ports that need inbound permissions from the Pingdom probes
@@ -40,14 +40,14 @@ def lambda_handler(event, context):
     return result
     
 def get_ip_addresses(url):
-    response = urllib2.urlopen(url)
+    response = urlopen(url)
     ip_list = response.read()
     
     return [ip.strip() for ip in ip_list.splitlines()]
 
 def get_security_groups_for_update(client):
     filters = list();
-    for key, value in SECURITY_GROUP_TAGS.iteritems():
+    for key, value in SECURITY_GROUP_TAGS.items():
         filters.extend(
             [
                 { 'Name': "tag-key", 'Values': [ key ] },
@@ -64,8 +64,8 @@ def update_security_groups(client, groups, addresses):
     groupindex = 0
     ipaddresses = 0
     for group in groups:
-        start = groupindex * RULES_PER_SG / 2
-        end = start + RULES_PER_SG / 2
+        start = groupindex * RULES_PER_SG // 2
+        end = start + RULES_PER_SG // 2
         addrsubset = addresses[start:end]
         print('Adding ' + str(len(addrsubset)) + ' IP addresses to ' + group['GroupId'])
         clear_security_group(client, group)
@@ -95,7 +95,7 @@ def update_security_group(client, group, addresses):
     for port in INGRESS_PORTS:
         to_add = list()
         for address in addresses:
-            range = address + "/32"
+            range = address.decode() + "/32"
             to_add.append({ 'CidrIp': range })
         permission = { 'ToPort': port, 'FromPort': port, 'IpProtocol': 'tcp'}
         added += add_permissions(client, group, permission, to_add)
